@@ -87,7 +87,7 @@ export function Estado({ tipo, msg, acao }: { tipo: "loading" | "erro" | "vazio"
 
 const pinCor: Record<Gravidade, string> = { Grave: "bg-severe", Moderada: "bg-moderate", Leve: "bg-mild" };
 
-export function Mapa({ itens, selecionado, onSelect }: { itens: Ocorrencia[]; selecionado?: string; onSelect: (id: string) => void }) {
+export function Mapa({ itens, selecionado, onSelect }: { itens: Ocorrencia[]; selecionado?: string | undefined; onSelect: (id: string) => void }) {
   return (
     <div className="relative h-full min-h-[420px] overflow-hidden bg-map-land" role="region" aria-label="Mapa das ocorrências">
       <svg className="absolute inset-0 size-full" preserveAspectRatio="none" viewBox="0 0 100 100" aria-hidden>

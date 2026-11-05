@@ -24,7 +24,7 @@ const campo = "w-full rounded-lg border bg-background px-3 py-3 text-base placeh
 function Nova() {
   const nav = useNavigate();
   const qc = useQueryClient();
-  const [tipo, setTipo] = useState(TIPOS[0]);
+  const [tipo, setTipo] = useState<string>("Buraco");
   const [gravidade, setGravidade] = useState<Gravidade>("Moderada");
   const [endereco, setEndereco] = useState("");
   const [descricao, setDescricao] = useState("");
