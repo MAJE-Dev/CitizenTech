@@ -11,9 +11,9 @@ export function Shell({ children }: { children: ReactNode }) {
   ] as const;
   return (
     <div className="flex min-h-dvh flex-col bg-background font-sans text-foreground">
-      <header className="flex items-center justify-between bg-primary px-5 py-3 text-primary-foreground">
+      <header className="flex items-center justify-between bg-[#0080ff] px-5 py-3 text-white">
         <Link to="/" className="flex items-center gap-2 text-xl font-extrabold tracking-tight">
-          <MapPin aria-hidden className="size-6 text-accent" /> CitizenTech
+          <MapPin aria-hidden className="size-6 text-white" /> SmartRoad
         </Link>
         <div className="flex items-center gap-3">
           <button aria-label="Notificações" className="grid size-10 place-items-center rounded-full bg-primary-foreground/10">
