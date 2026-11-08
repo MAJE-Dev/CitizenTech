@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Fonts, Spacing } from "@/theme";
+import { Colors, Fonts, Sizes, Spacing } from "@/theme";
 
 export function MarcaTitulo() {
   return (
     <View style={s.linha} accessible accessibilityRole="header" accessibilityLabel="SmartRoad">
-      <Ionicons name="location" size={26} color="#ffffff" />
+      <Ionicons name="location" size={Sizes.iconeMarca} color={Colors.branco} />
       <Text style={s.txt}>SmartRoad</Text>
     </View>
   );
@@ -13,5 +13,5 @@ export function MarcaTitulo() {
 
 const s = StyleSheet.create({
   linha: { flexDirection: "row", alignItems: "center", gap: Spacing.sm },
-  txt: { color: "#ffffff", fontSize: Fonts.marca, fontWeight: "800" },
+  txt: { color: Colors.branco, fontSize: Fonts.marca, fontWeight: "800" },
 });

@@ -3,6 +3,7 @@
 export const Colors = {
   marca: "#0080ff", // barra do topo (SmartRoad)
   primaria: "#0057b8", // botões e links (contraste 7:1 com branco)
+  branco: "#ffffff",
   primariaTexto: "#ffffff",
   fundo: "#f2f6fc",
   cartao: "#ffffff",
@@ -17,6 +18,7 @@ export const Colors = {
   mapaTerra: "#e9efe3",
   mapaRua: "#ffffff",
   mapaParque: "#c8e6c0",
+  mapaNota: "rgba(255,255,255,0.9)", // fundo da legenda do mapa
 } as const;
 
 export const Fonts = {
@@ -30,3 +32,17 @@ export const Fonts = {
 export const Spacing = { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 } as const;
 export const Radius = { sm: 8, md: 12, pill: 999 } as const;
 export const MinTouch = 48; // área mínima de toque
+
+// Tamanhos de componentes (altura do mapa, barra de abas, pinos, ícones).
+export const Sizes = {
+  mapa: 260,
+  tabBar: 64,
+  chip: 40,
+  campoMultilinha: 96,
+  pino: 36,
+  pinoAtivo: 44,
+  rua: 6,
+  iconePino: 20,
+  iconePinoAtivo: 24,
+  iconeMarca: 26,
+} as const;

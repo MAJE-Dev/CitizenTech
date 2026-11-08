@@ -8,7 +8,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
-import { Colors, Fonts, MinTouch, Radius, Spacing } from "@/theme";
+import { Colors, Fonts, MinTouch, Radius, Sizes, Spacing } from "@/theme";
 import type { Gravidade, Status } from "@/services/ocorrencias";
 
 export function Botao({
@@ -92,14 +92,14 @@ export function Linha({ rotulo, valor }: { rotulo: string; valor: string }) {
 }
 
 const gravCor: Record<Gravidade, { bg: string; fg: string }> = {
-  Grave: { bg: Colors.grave, fg: "#ffffff" },
+  Grave: { bg: Colors.grave, fg: Colors.branco },
   Moderada: { bg: Colors.moderada, fg: Colors.texto },
   Leve: { bg: Colors.leve, fg: Colors.texto },
 };
 const statusCor: Record<Status, { bg: string; fg: string }> = {
   Recebida: { bg: Colors.cartao, fg: Colors.texto },
-  "Em andamento": { bg: Colors.progresso, fg: "#ffffff" },
-  Concluída: { bg: Colors.concluida, fg: "#ffffff" },
+  "Em andamento": { bg: Colors.progresso, fg: Colors.branco },
+  Concluída: { bg: Colors.concluida, fg: Colors.branco },
 };
 
 export const GravidadeTag = ({ g }: { g: Gravidade }) => (
@@ -163,7 +163,7 @@ const s = StyleSheet.create({
   botaoSec: { backgroundColor: Colors.cartao },
   botaoTxt: { color: Colors.primariaTexto, fontSize: Fonts.subtitulo, fontWeight: "700" },
   chip: {
-    minHeight: 40,
+    minHeight: Sizes.chip,
     justifyContent: "center",
     paddingHorizontal: Spacing.md,
     borderRadius: Radius.sm,

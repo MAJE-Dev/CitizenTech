@@ -12,7 +12,7 @@ import { router } from "expo-router";
 import { Botao, Chip } from "@/components/ui";
 import { dataBR, salvarOcorrencia } from "@/services/db";
 import { GRAVIDADES, TIPOS, type Gravidade } from "@/services/ocorrencias";
-import { Colors, Fonts, MinTouch, Radius, Spacing } from "@/theme";
+import { Colors, Fonts, MinTouch, Radius, Sizes, Spacing } from "@/theme";
 
 export default function Nova() {
   const [tipo, setTipo] = useState(TIPOS[0]!);
@@ -117,7 +117,14 @@ export default function Nova() {
             placeholder="Ex.: buraco grande perto da faixa"
             placeholderTextColor={Colors.textoSuave}
             accessibilityLabel="Descrição do problema"
-            style={[s.campo, { minHeight: 96, textAlignVertical: "top", paddingTop: Spacing.sm }]}
+            style={[
+              s.campo,
+              {
+                minHeight: Sizes.campoMultilinha,
+                textAlignVertical: "top",
+                paddingTop: Spacing.sm,
+              },
+            ]}
           />
         </View>
 

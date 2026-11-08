@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors, Fonts, Radius, Spacing } from "@/theme";
+import { Colors, Fonts, Radius, Sizes, Spacing } from "@/theme";
 import type { Gravidade, Ocorrencia } from "@/services/ocorrencias";
 
 const corPino: Record<Gravidade, string> = {
@@ -24,14 +24,20 @@ export function Mapa({
       <View style={[s.parque, { left: "60%", top: "40%", width: "15%", height: "12%" }]} />
       <View style={[s.parque, { left: "8%", top: "10%", width: "10%", height: "14%" }]} />
       {[15, 35, 50, 75, 90].map((y) => (
-        <View key={`h${y}`} style={[s.rua, { top: `${y}%`, left: 0, right: 0, height: 6 }]} />
+        <View
+          key={`h${y}`}
+          style={[s.rua, { top: `${y}%`, left: 0, right: 0, height: Sizes.rua }]}
+        />
       ))}
       {[20, 40, 60, 85].map((x) => (
-        <View key={`v${x}`} style={[s.rua, { left: `${x}%`, top: 0, bottom: 0, width: 6 }]} />
+        <View
+          key={`v${x}`}
+          style={[s.rua, { left: `${x}%`, top: 0, bottom: 0, width: Sizes.rua }]}
+        />
       ))}
       {itens.map((o) => {
         const ativo = selecionado === o.id;
-        const tam = ativo ? 44 : 36;
+        const tam = ativo ? Sizes.pinoAtivo : Sizes.pino;
         return (
           <Pressable
             key={o.id}
@@ -52,7 +58,11 @@ export function Mapa({
               ativo && s.pinoAtivo,
             ]}
           >
-            <Ionicons name="location" size={ativo ? 24 : 20} color="#ffffff" />
+            <Ionicons
+              name="location"
+              size={ativo ? Sizes.iconePinoAtivo : Sizes.iconePino}
+              color={Colors.branco}
+            />
           </Pressable>
         );
       })}
@@ -63,7 +73,7 @@ export function Mapa({
 
 const s = StyleSheet.create({
   mapa: {
-    height: 260,
+    height: Sizes.mapa,
     backgroundColor: Colors.mapaTerra,
     overflow: "hidden",
     borderRadius: Radius.md,
@@ -78,7 +88,7 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
-    borderColor: "#ffffff",
+    borderColor: Colors.branco,
   },
   pinoAtivo: { borderColor: Colors.primaria, borderWidth: 3 },
   nota: {
@@ -87,7 +97,7 @@ const s = StyleSheet.create({
     bottom: Spacing.sm,
     fontSize: Fonts.pequena,
     color: Colors.textoSuave,
-    backgroundColor: "rgba(255,255,255,0.9)",
+    backgroundColor: Colors.mapaNota,
     paddingHorizontal: Spacing.sm,
     paddingVertical: Spacing.xs,
     borderRadius: Radius.sm,
