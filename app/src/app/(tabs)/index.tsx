@@ -17,7 +17,7 @@ export default function Inicio() {
   const [busca, setBusca] = useState("");
   const [sel, setSel] = useState<string>();
 
-  const itens = (dados ?? []).filter(
+  const itens = (dados?.itens ?? []).filter(
     (o) =>
       (!filtro || o.tipo === filtro) &&
       (o.endereco + o.id).toLowerCase().includes(busca.toLowerCase()),
@@ -57,6 +57,11 @@ export default function Inicio() {
           </ScrollView>
           {!carregando && !erro && (
             <>
+              {dados?.offline && (
+                <Text accessibilityRole="alert" style={s.aviso}>
+                  Sem internet agora. Mostrando as ocorrências de exemplo que estão salvas no app.
+                </Text>
+              )}
               <Mapa itens={itens} selecionado={sel} onSelect={setSel} />
               {atual && (
                 <Cartao>
@@ -154,6 +159,15 @@ const s = StyleSheet.create({
     overflow: "hidden",
   },
   topo: { flexDirection: "row", justifyContent: "space-between" },
+  aviso: {
+    fontSize: Fonts.pequena,
+    color: Colors.texto,
+    backgroundColor: Colors.cartao,
+    borderWidth: 1,
+    borderColor: Colors.moderada,
+    borderRadius: Radius.sm,
+    padding: Spacing.sm,
+  },
   id: { fontSize: Fonts.subtitulo, fontWeight: "800", color: Colors.primaria },
   data: { fontSize: Fonts.pequena, color: Colors.textoSuave },
   texto: { fontSize: Fonts.corpo, color: Colors.texto },

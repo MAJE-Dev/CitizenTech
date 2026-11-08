@@ -42,6 +42,14 @@ export async function listarLocais(): Promise<Ocorrencia[]> {
   return db.getAllAsync<Ocorrencia>("SELECT * FROM ocorrencias ORDER BY criadaEm DESC");
 }
 
+export async function buscarLocal(id: string): Promise<Ocorrencia | undefined> {
+  const db = await abrir();
+  return (
+    (await db.getFirstAsync<Ocorrencia>("SELECT * FROM ocorrencias WHERE id = ?", [id])) ??
+    undefined
+  );
+}
+
 export async function salvarOcorrencia(o: Ocorrencia): Promise<void> {
   const db = await abrir();
   await db.runAsync(
