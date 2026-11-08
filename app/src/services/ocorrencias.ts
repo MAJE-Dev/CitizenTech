@@ -22,109 +22,22 @@ export interface Ocorrencia {
 export const TIPOS = ["Buraco", "Bueiro quebrado", "Iluminação", "Calçada danificada"];
 export const GRAVIDADES: Gravidade[] = ["Leve", "Moderada", "Grave"];
 
-const MOCK: Ocorrencia[] = [
-  {
-    id: "OC-3426-456",
-    tipo: "Buraco",
-    gravidade: "Grave",
-    status: "Em andamento",
-    endereco: "Rua das Palmeiras, 32 - Centro",
-    lat: -23.5489,
-    lng: -46.6388,
-    x: 42,
-    y: 30,
-    abertaEm: "23/10/2026",
-    atualizadaEm: "24/10/2026",
-    andamento: "Reparo emergencial",
-    descricao: "Rachaduras perto do cruzamento.",
-  },
-  {
-    id: "OC-3427-101",
-    tipo: "Bueiro quebrado",
-    gravidade: "Moderada",
-    status: "Recebida",
-    endereco: "Av. Brasil, 1200 - Jardim Sul",
-    lat: -23.5521,
-    lng: -46.6302,
-    x: 68,
-    y: 22,
-    abertaEm: "25/10/2026",
-    atualizadaEm: "25/10/2026",
-    andamento: "Aguardando vistoria",
-    descricao: "Tampa do bueiro solta.",
-  },
-  {
-    id: "OC-3428-220",
-    tipo: "Buraco",
-    gravidade: "Leve",
-    status: "Concluída",
-    endereco: "Rua Ipê Amarelo, 78 - Vila Nova",
-    lat: -23.5455,
-    lng: -46.6411,
-    x: 25,
-    y: 55,
-    abertaEm: "10/10/2026",
-    atualizadaEm: "18/10/2026",
-    andamento: "Asfalto refeito",
-    descricao: "Buraco pequeno na faixa da direita.",
-  },
-  {
-    id: "OC-3429-332",
-    tipo: "Iluminação",
-    gravidade: "Moderada",
-    status: "Em andamento",
-    endereco: "Praça da Matriz, s/n - Centro",
-    lat: -23.5502,
-    lng: -46.6355,
-    x: 55,
-    y: 62,
-    abertaEm: "20/10/2026",
-    atualizadaEm: "22/10/2026",
-    andamento: "Troca de lâmpada agendada",
-    descricao: "Poste apagado à noite.",
-  },
-  {
-    id: "OC-3430-418",
-    tipo: "Calçada danificada",
-    gravidade: "Grave",
-    status: "Recebida",
-    endereco: "Rua do Comércio, 410 - Bela Vista",
-    lat: -23.5477,
-    lng: -46.629,
-    x: 80,
-    y: 70,
-    abertaEm: "26/10/2026",
-    atualizadaEm: "26/10/2026",
-    andamento: "Aguardando vistoria",
-    descricao: "Calçada com desnível, risco de queda.",
-  },
-  {
-    id: "OC-3431-509",
-    tipo: "Buraco",
-    gravidade: "Moderada",
-    status: "Em andamento",
-    endereco: "Av. das Flores, 950 - Jardim Sul",
-    lat: -23.5533,
-    lng: -46.6372,
-    x: 35,
-    y: 80,
-    abertaEm: "21/10/2026",
-    atualizadaEm: "23/10/2026",
-    andamento: "Equipe a caminho",
-    descricao: "Buraco médio após chuva.",
-  },
-];
+import { getJson } from "./api";
 
-const espera = (ms: number) => new Promise((r) => setTimeout(r, ms));
+// Mock: arquivo JSON do repositório (app/mock/ocorrencias.json), buscado com fetch.
+// A URL pode ser trocada pela variável EXPO_PUBLIC_API_URL (veja .env.example).
+export const API_URL =
+  process.env.EXPO_PUBLIC_API_URL ||
+  "https://raw.githubusercontent.com/MAJE-Dev/CitizenTech/main/app/mock/ocorrencias.json";
 
-/** Lista ocorrências da cidade (mock) somadas às registradas no banco local. */
+/** Lista as ocorrências da cidade (mock via fetch) somadas às registradas no banco local. */
 export async function listarOcorrencias(opcoes?: { simularErro?: boolean }): Promise<Ocorrencia[]> {
-  await espera(700); // simula a rede
-  if (opcoes?.simularErro) {
-    throw new Error("Não foi possível carregar as ocorrências. Verifique sua internet.");
-  }
+  // Para demonstrar o estado de erro, busca um arquivo que não existe.
+  const cidade = await getJson<Ocorrencia[]>(
+    opcoes?.simularErro ? `${API_URL}.inexistente` : API_URL,
+  );
   const { listarLocais } = await import("./db");
-  return [...(await listarLocais()), ...MOCK];
+  return [...(await listarLocais()), ...cidade];
 }
 
 export async function buscarOcorrencia(id: string): Promise<Ocorrencia | undefined> {

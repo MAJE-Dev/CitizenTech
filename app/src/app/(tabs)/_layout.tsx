@@ -3,7 +3,7 @@ import { Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { MarcaTitulo } from "@/components/MarcaTitulo";
-import { Colors, Fonts } from "@/theme";
+import { Colors, Fonts, Sizes, Spacing } from "@/theme";
 
 type Icone = keyof typeof Ionicons.glyphMap;
 const aba = (titulo: string, icone: Icone) => ({
@@ -26,7 +26,11 @@ export default function TabsLayout() {
         tabBarActiveTintColor: Colors.primaria,
         tabBarInactiveTintColor: Colors.textoSuave,
         tabBarLabelStyle: { fontSize: Fonts.pequena, fontWeight: "600" },
-        tabBarStyle: { height: 64 + bottom, paddingBottom: 8 + bottom, paddingTop: 6 },
+        tabBarStyle: {
+          height: Sizes.tabBar + bottom,
+          paddingBottom: Spacing.sm + bottom,
+          paddingTop: Spacing.xs,
+        },
         sceneStyle: { backgroundColor: Colors.fundo },
       }}
     >
