@@ -1,5 +1,6 @@
 import type { ColorValue } from "react-native";
 import { Tabs } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { MarcaTitulo } from "@/components/MarcaTitulo";
 import { Colors, Fonts } from "@/theme";
@@ -14,6 +15,8 @@ const aba = (titulo: string, icone: Icone) => ({
 });
 
 export default function TabsLayout() {
+  // Sobe a barra para não ficar embaixo dos botões do Android (navegação por gestos ou 3 botões).
+  const { bottom } = useSafeAreaInsets();
   return (
     <Tabs
       screenOptions={{
@@ -23,7 +26,7 @@ export default function TabsLayout() {
         tabBarActiveTintColor: Colors.primaria,
         tabBarInactiveTintColor: Colors.textoSuave,
         tabBarLabelStyle: { fontSize: Fonts.pequena, fontWeight: "600" },
-        tabBarStyle: { height: 64, paddingBottom: 8, paddingTop: 6 },
+        tabBarStyle: { height: 64 + bottom, paddingBottom: 8 + bottom, paddingTop: 6 },
         sceneStyle: { backgroundColor: Colors.fundo },
       }}
     >

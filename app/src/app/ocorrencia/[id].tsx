@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Botao, Cartao, Estado, GravidadeTag, Linha, StatusTag } from "@/components/ui";
 import { useCarregar } from "@/hooks/useCarregar";
 import { listarComentarios, salvarComentario, type Comentario } from "@/services/db";
@@ -17,6 +18,7 @@ import { Colors, Fonts, MinTouch, Radius, Spacing } from "@/theme";
 
 export default function Detalhe() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { bottom } = useSafeAreaInsets();
   const { dados, carregando, erro, recarregar } = useCarregar(() => buscarOcorrencia(id), [id]);
   const [coms, setComs] = useState<Comentario[]>([]);
   const [texto, setTexto] = useState("");
@@ -39,7 +41,11 @@ export default function Detalhe() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
-        contentContainerStyle={{ padding: Spacing.md, gap: Spacing.md }}
+        contentContainerStyle={{
+          padding: Spacing.md,
+          paddingBottom: Spacing.md + bottom,
+          gap: Spacing.md,
+        }}
         keyboardShouldPersistTaps="handled"
       >
         {carregando && <Estado tipo="loading" msg="Carregando detalhes..." />}
