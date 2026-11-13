@@ -2,27 +2,57 @@
   "expo": {
     "name": "SmartRoad CitizenTech",
     "slug": "citizentech",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "citizentech",
     "userInterfaceStyle": "light",
     "android": {
       "package": "dev.maje.citizentech",
+      "versionCode": 2,
       "adaptiveIcon": {
-        "backgroundColor": "#0080ff",
+        "backgroundColor": "#0054b0",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       }
     },
-    "ios": { "bundleIdentifier": "dev.maje.citizentech" },
-    "web": { "favicon": "./assets/images/favicon.png" },
+    "ios": {
+      "bundleIdentifier": "dev.maje.citizentech"
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    },
     "plugins": [
       "expo-router",
       "expo-sqlite",
-      ["expo-splash-screen", { "backgroundColor": "#0080ff", "image": "./assets/images/splash-icon.png", "imageWidth": 76 }]
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0054b0",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "O SmartRoad usa sua localização para marcar onde fica o problema que você está registrando.",
+          "motionUsagePermission": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "O SmartRoad usa a câmera para você tirar uma foto do problema.",
+          "photosPermission": "O SmartRoad acessa suas fotos para você anexar uma imagem do problema.",
+          "microphonePermission": false
+        }
+      ]
     ],
-    "experiments": { "typedRoutes": true, "reactCompiler": true }
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
   }
 }

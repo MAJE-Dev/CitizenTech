@@ -1,21 +1,36 @@
 import { useState } from "react";
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { Botao, Cartao, Chip, Estado, GravidadeTag, Linha, StatusTag } from "@/components/ui";
 import { Mapa } from "@/components/Mapa";
+import { MapaReal } from "@/components/MapaReal";
 import { useCarregar } from "@/hooks/useCarregar";
 import { listarOcorrencias, TIPOS } from "@/services/ocorrencias";
-import { Colors, Fonts, MinTouch, Radius, Spacing } from "@/theme";
+import { Colors, Fonts, MinTouch, Radius, Sizes, Spacing } from "@/theme";
 
 export default function Inicio() {
   const [simularErro, setSimularErro] = useState(false);
   const { dados, carregando, erro, recarregar } = useCarregar(
-    () => listarOcorrencias({ simularErro }),
+    (forcar) => listarOcorrencias({ simularErro, forcar }),
     [simularErro],
   );
+  // Só mostra "Carregando" na primeira vez; depois a lista fica na tela enquanto atualiza.
+  const primeiraCarga = carregando && !dados;
   const [filtro, setFiltro] = useState<string | null>(null);
   const [busca, setBusca] = useState("");
   const [sel, setSel] = useState<string>();
+  // Sem internet (ou se o mapa real não abrir), mostra o mapa ilustrativo no lugar.
+  const [mapaFalhou, setMapaFalhou] = useState(false);
 
   const itens = (dados?.itens ?? []).filter(
     (o) =>
@@ -26,12 +41,32 @@ export default function Inicio() {
 
   return (
     <FlatList
-      data={carregando || erro ? [] : itens}
+      data={primeiraCarga || erro ? [] : itens}
       keyExtractor={(o) => o.id}
+      refreshing={carregando && !primeiraCarga}
+      onRefresh={() => {
+        setMapaFalhou(false); // puxar para atualizar tenta o mapa real de novo
+        recarregar();
+      }}
       contentContainerStyle={{ padding: Spacing.md, gap: Spacing.sm }}
       keyboardShouldPersistTaps="handled"
       ListHeaderComponent={
         <View style={{ gap: Spacing.md }}>
+          <View style={s.demo}>
+            <Ionicons name="construct" size={Sizes.iconeAviso} color={Colors.texto} />
+            <View style={{ flex: 1 }}>
+              <Text style={s.demoTitulo}>Simular erro de conexão</Text>
+              <Text style={s.demoTexto}>Para demonstração: mostra a tela de erro.</Text>
+            </View>
+            <Switch
+              value={simularErro}
+              onValueChange={setSimularErro}
+              accessibilityLabel="Simular erro de conexão"
+              accessibilityHint="Liga ou desliga a demonstração da tela de erro"
+              trackColor={{ false: Colors.borda, true: Colors.primaria }}
+              thumbColor={Colors.branco}
+            />
+          </View>
           <TextInput
             value={busca}
             onChangeText={setBusca}
@@ -55,14 +90,23 @@ export default function Inicio() {
               />
             ))}
           </ScrollView>
-          {!carregando && !erro && (
+          {!primeiraCarga && !erro && (
             <>
               {dados?.offline && (
                 <Text accessibilityRole="alert" style={s.aviso}>
                   Sem internet agora. Mostrando as ocorrências de exemplo que estão salvas no app.
                 </Text>
               )}
-              <Mapa itens={itens} selecionado={sel} onSelect={setSel} />
+              {dados?.offline || mapaFalhou ? (
+                <Mapa itens={itens} selecionado={sel} onSelect={setSel} />
+              ) : (
+                <MapaReal
+                  itens={itens}
+                  selecionado={sel}
+                  onSelect={setSel}
+                  onFalha={() => setMapaFalhou(true)}
+                />
+              )}
               {atual && (
                 <Cartao>
                   <Text style={s.id}>{atual.id}</Text>
@@ -83,7 +127,7 @@ export default function Inicio() {
               )}
             </>
           )}
-          {carregando && <Estado tipo="loading" msg="Carregando ocorrências..." />}
+          {primeiraCarga && <Estado tipo="loading" msg="Carregando ocorrências..." />}
           {erro && (
             <Estado
               tipo="erro"
@@ -92,14 +136,15 @@ export default function Inicio() {
                 <Botao
                   titulo="Tentar de novo"
                   onPress={() => {
-                    setSimularErro(false);
-                    if (!simularErro) recarregar();
+                    // Desliga a simulação (a chave do topo volta) e busca de novo.
+                    if (simularErro) setSimularErro(false);
+                    else recarregar();
                   }}
                 />
               }
             />
           )}
-          {dados && !carregando && !erro && itens.length === 0 && (
+          {dados && !erro && itens.length === 0 && (
             <Estado tipo="vazio" msg="Nenhuma ocorrência encontrada. Tente outro filtro." />
           )}
         </View>
@@ -127,14 +172,6 @@ export default function Inicio() {
           </Pressable>
         </Link>
       )}
-      ListFooterComponent={
-        <Botao
-          secundario
-          titulo={simularErro ? "Desligar erro simulado" : "Simular erro de conexão"}
-          onPress={() => setSimularErro((v) => !v)}
-          estilo={{ marginTop: Spacing.md }}
-        />
-      }
     />
   );
 }
@@ -159,12 +196,26 @@ const s = StyleSheet.create({
     overflow: "hidden",
   },
   topo: { flexDirection: "row", justifyContent: "space-between" },
+  demo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+    minHeight: MinTouch,
+    backgroundColor: Colors.avisoFundo,
+    borderWidth: 1,
+    borderColor: Colors.destaque,
+    borderRadius: Radius.md,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+  },
+  demoTitulo: { fontSize: Fonts.corpo, fontWeight: "700", color: Colors.texto },
+  demoTexto: { fontSize: Fonts.pequena, color: Colors.texto },
   aviso: {
     fontSize: Fonts.pequena,
     color: Colors.texto,
-    backgroundColor: Colors.cartao,
+    backgroundColor: Colors.avisoFundo,
     borderWidth: 1,
-    borderColor: Colors.moderada,
+    borderColor: Colors.destaque,
     borderRadius: Radius.sm,
     padding: Spacing.sm,
   },
