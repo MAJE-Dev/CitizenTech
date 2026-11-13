@@ -33,7 +33,10 @@ function abrir() {
       );
     `);
     return db;
-  })();
+  })().catch((e: unknown) => {
+    dbPromise = null; // não guarda a falha: a próxima chamada tenta abrir de novo
+    throw e;
+  });
   return dbPromise;
 }
 
@@ -50,10 +53,14 @@ export async function buscarLocal(id: string): Promise<Ocorrencia | undefined> {
   );
 }
 
-export async function salvarOcorrencia(o: Ocorrencia): Promise<void> {
+/**
+ * Grava a ocorrência. Devolve `false` (sem gravar nada) se o protocolo já existir no banco,
+ * para quem chamou sortear outro: a chave primária garante que nenhum protocolo se repete.
+ */
+export async function inserirOcorrencia(o: Ocorrencia): Promise<boolean> {
   const db = await abrir();
-  await db.runAsync(
-    `INSERT INTO ocorrencias (id, tipo, gravidade, status, endereco, lat, lng, x, y, abertaEm, atualizadaEm, andamento, descricao, criadaEm)
+  const resultado = await db.runAsync(
+    `INSERT OR IGNORE INTO ocorrencias (id, tipo, gravidade, status, endereco, lat, lng, x, y, abertaEm, atualizadaEm, andamento, descricao, criadaEm)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       o.id,
@@ -72,9 +79,11 @@ export async function salvarOcorrencia(o: Ocorrencia): Promise<void> {
       Date.now(),
     ],
   );
+  return resultado.changes > 0;
 }
 
 export interface Comentario {
+  id: number;
   texto: string;
   data: string;
 }
@@ -82,18 +91,19 @@ export interface Comentario {
 export async function listarComentarios(ocorrenciaId: string): Promise<Comentario[]> {
   const db = await abrir();
   return db.getAllAsync<Comentario>(
-    "SELECT texto, data FROM comentarios WHERE ocorrenciaId = ? ORDER BY id ASC",
+    "SELECT id, texto, data FROM comentarios WHERE ocorrenciaId = ? ORDER BY id ASC",
     [ocorrenciaId],
   );
 }
 
-export async function salvarComentario(ocorrenciaId: string, texto: string): Promise<void> {
+export async function salvarComentario(ocorrenciaId: string, texto: string): Promise<Comentario> {
   const db = await abrir();
-  await db.runAsync("INSERT INTO comentarios (ocorrenciaId, texto, data) VALUES (?, ?, ?)", [
-    ocorrenciaId,
-    texto,
-    dataHoraBR(new Date()),
-  ]);
+  const data = dataHoraBR(new Date());
+  const resultado = await db.runAsync(
+    "INSERT INTO comentarios (ocorrenciaId, texto, data) VALUES (?, ?, ?)",
+    [ocorrenciaId, texto, data],
+  );
+  return { id: resultado.lastInsertRowId, texto, data };
 }
 
 export const dataBR = (d: Date) =>

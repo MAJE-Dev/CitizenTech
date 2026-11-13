@@ -10,8 +10,7 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { Botao, Chip } from "@/components/ui";
-import { dataBR, salvarOcorrencia } from "@/services/db";
-import { GRAVIDADES, TIPOS, type Gravidade } from "@/services/ocorrencias";
+import { GRAVIDADES, registrarOcorrencia, TIPOS, type Gravidade } from "@/services/ocorrencias";
 import { Colors, Fonts, MinTouch, Radius, Sizes, Spacing } from "@/theme";
 
 export default function Nova() {
@@ -26,22 +25,12 @@ export default function Nova() {
     if (endereco.trim().length < 5) return setErro("Informe o endereço do problema.");
     setSalvando(true);
     try {
-      const hoje = dataBR(new Date());
-      const id = `OC-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(100 + Math.random() * 900)}`;
-      await salvarOcorrencia({
-        id,
+      // O protocolo é gerado na camada de serviços, que garante que ele não se repete.
+      const { id } = await registrarOcorrencia({
         tipo,
         gravidade,
-        status: "Recebida",
         endereco: endereco.trim(),
-        descricao: descricao.trim() || "Sem descrição.",
-        lat: -23.55 + Math.random() * 0.01,
-        lng: -46.64 + Math.random() * 0.01, // coordenadas fictícias
-        x: 15 + Math.random() * 70,
-        y: 15 + Math.random() * 70,
-        abertaEm: hoje,
-        atualizadaEm: hoje,
-        andamento: "Aguardando vistoria",
+        descricao: descricao.trim(),
       });
       setEndereco("");
       setDescricao("");
