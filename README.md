@@ -1,6 +1,47 @@
 # CitizenTech — SmartRoad
 
-App React Native (Expo + TypeScript + Expo Router) para o cidadão **registrar e acompanhar problemas na rua**, como buracos, bueiros quebrados, falta de iluminação e calçadas danificadas. Projeto da Global Solution 2026.2 — Mobile Development & IoT.
+<p align="center">
+  <img src="app/assets/images/logo-marca.png" alt="Logo do SmartRoad: pino de mapa com uma rua dentro" width="120" />
+</p>
+
+## Integrantes
+
+| Nome | RM |
+| --- | --- |
+| Gustavo Viega Lopes Martins | RM555885 |
+| Gustavo Yuji Osugi | RM555034 |
+| Kaio Drago Lima Souza | RM556095 |
+| Otávio Santos de Lima Ferrão | RM556452 |
+| Vitor Rivas Cardoso | RM556404 |
+
+## Sobre o projeto
+
+**SmartRoad** é um app mobile para o cidadão **registrar e acompanhar problemas na rua**: buracos, bueiros quebrados, falta de iluminação e calçadas danificadas. Feito com React Native (Expo + TypeScript + Expo Router) na **Global Solution 2026.2 — Mobile Development & IoT**.
+
+- **Ver** as ocorrências da cidade num mapa real (OpenStreetMap) e numa lista, com busca e filtro por tipo.
+- **Registrar** um problema em menos de 1 minuto: tipo, gravidade, localização do celular e foto (opcionais) e descrição.
+- **Acompanhar** o andamento de cada ocorrência (Recebida → Em andamento → Concluída) e **comentar**.
+- **Funcionar offline**: sem internet, o app avisa, usa uma cópia local das ocorrências e troca o mapa real por um mapa ilustrativo.
+- **Acessível**: contraste alto, áreas de toque de 48 px e rótulos para leitor de tela.
+
+## Prints das telas
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/prints/inicio.jpg" alt="Tela Início com mapa, busca, filtros e lista de ocorrências" width="220" /></td>
+    <td align="center"><img src="docs/prints/filtro-tipo.jpg" alt="Tela Início filtrada por Calçada danificada, mostrando um único pino no mapa" width="220" /></td>
+    <td align="center"><img src="docs/prints/registrar.jpg" alt="Tela Registrar ocorrência com tipo, gravidade, localização e foto" width="220" /></td>
+    <td align="center"><img src="docs/prints/detalhe.jpg" alt="Tela Detalhe da ocorrência com dados, andamento e comentários" width="220" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Início</b><br/>Mapa com um pino por ocorrência, busca e lista</td>
+    <td align="center"><b>Filtro por tipo</b><br/>Mapa e lista mostram só o tipo escolhido</td>
+    <td align="center"><b>Registrar</b><br/>Tipo, gravidade, local, foto e descrição</td>
+    <td align="center"><b>Detalhe</b><br/>Dados, andamento e comentários</td>
+  </tr>
+</table>
+
+**Como ler as cores:** os pinos e as etiquetas de gravidade usam amarelo para **Leve**, laranja para **Moderada** e vermelho para **Grave**. A etiqueta "Dados simulados" no mapa lembra que as ocorrências da cidade são fictícias. A tela **Histórico** lista só o que o próprio usuário registrou.
 
 ## Ficha da CitizenTech
 
@@ -19,16 +60,6 @@ App React Native (Expo + TypeScript + Expo Router) para o cidadão **registrar e
 | **ODS conectados** | ODS 11 (Cidades e comunidades sustentáveis) e ODS 9 (Indústria, inovação e infraestrutura). _(confirmar)_ |
 
 **Jornada principal:** Início (ver ocorrências) → Registrar (avisar um problema) → Histórico (ver o que registrei) → Detalhe (andamento e comentários).
-
-## Integrantes
-
-| Nome | RM |
-| --- | --- |
-| Gustavo Viega Lopes Martins | RM555885 |
-| Gustavo Yuji Osugi | RM555034 |
-| Kaio Drago Lima Souza | RM556095 |
-| Otávio Santos de Lima Ferrão | RM556452 |
-| Vitor Rivas Cardoso | RM556404 |
 
 ## Como rodar o app
 
@@ -54,6 +85,18 @@ Também há um APK pronto na aba **Releases** do repositório.
 | Registrar | `app/src/app/(tabs)/nova.tsx` | Formulário com localização do celular e foto (opcionais), salvo no banco |
 | Histórico | `app/src/app/(tabs)/historico.tsx` | Ocorrências que o usuário registrou |
 | Detalhe | `app/src/app/ocorrencia/[id].tsx` | Dados, foto, andamento e comentários |
+
+## Tecnologias
+
+| Para quê | Tecnologia |
+| --- | --- |
+| App e navegação | React Native 0.88, Expo 58 e Expo Router (abas + tela de detalhe) |
+| Linguagem | TypeScript |
+| Banco local | `expo-sqlite` |
+| Mapa | Leaflet dentro de `react-native-webview`, com imagens do OpenStreetMap |
+| Localização | `expo-location` |
+| Foto (câmera e galeria) | `expo-image-picker` e `expo-image` |
+| Build do APK | GitHub Actions (workflow **Build APK**) |
 
 ## Identidade visual
 
@@ -121,14 +164,6 @@ app/
 - Erros anunciados por leitor de tela e linguagem simples.
 - O mapa nunca é o único caminho: a lista logo abaixo traz as mesmas ocorrências.
 - Localização e foto são opcionais; quando a permissão é negada, o app explica o que fazer.
-
-## Prints das telas
-
-> **PREENCHER:** coloque os prints em `docs/prints/` e referencie aqui.
-
-| Início | Registrar | Histórico | Detalhe |
-| --- | --- | --- | --- |
-| _print_ | _print_ | _print_ | _print_ |
 
 ## Vídeo (até 3 minutos)
 
