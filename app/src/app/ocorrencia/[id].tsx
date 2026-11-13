@@ -1,7 +1,5 @@
 import { useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { Image } from "expo-image";
+import { useTeclado } from "@/components/useTeclado";
 import { useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Botao, Cartao, Estado, GravidadeTag, Linha, StatusTag } from "@/components/ui";
@@ -19,6 +18,7 @@ import { buscarOcorrencia } from "@/services/ocorrencias";
 import { Colors, Fonts, MinTouch, Radius, Sizes, Spacing } from "@/theme";
 
 export default function Detalhe() {
+  const teclado = useTeclado();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { bottom } = useSafeAreaInsets();
   const { dados, carregando, erro, recarregar } = useCarregar(() => buscarOcorrencia(id), [id]);
@@ -48,14 +48,14 @@ export default function Detalhe() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    <View style={{ flex: 1 }}>
       <ScrollView
+        ref={teclado.ref}
+        onScroll={teclado.onScroll}
+        scrollEventThrottle={16}
         contentContainerStyle={{
           padding: Spacing.md,
-          paddingBottom: Spacing.md + bottom,
+          paddingBottom: Spacing.md + (teclado.espaco || bottom),
           gap: Spacing.md,
         }}
         keyboardShouldPersistTaps="handled"
@@ -143,6 +143,7 @@ export default function Detalhe() {
                 placeholder="Escreva aqui..."
                 placeholderTextColor={Colors.textoSuave}
                 accessibilityLabel="Escreva um comentário"
+                onFocus={teclado.revelar}
                 style={[s.campo, !!erroEnvio && { borderColor: Colors.grave }]}
               />
               {!!erroEnvio && (
@@ -159,7 +160,7 @@ export default function Detalhe() {
           </>
         )}
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

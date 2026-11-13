@@ -80,7 +80,7 @@ Escolhemos o **SQLite local** porque é gratuito, funciona sem internet depois d
 - **Ocorrências da cidade:** mock em `app/mock/ocorrencias.json`, com endereços, datas e coordenadas **fictícios**. O app busca esse arquivo com `fetch` (`app/src/services/api.ts`) na URL raw do GitHub e trata **carregando**, **erro** (com botão "Tentar de novo") e **lista vazia**. A lista fica na memória enquanto o app está aberto: abrir o Detalhe ou voltar para o Início não baixa tudo de novo (puxar a lista para baixo atualiza).
 - **Ocorrências do usuário, comentários e fotos:** salvos no aparelho (SQLite e pasta do app). A foto e a localização **não são enviadas para nenhum servidor**.
 - **Localização:** só é lida quando o usuário toca em "Usar minha localização" (`app/src/services/localizacao.ts`). Se ele negar a permissão, basta digitar o endereço.
-- **Mapa:** imagens do [OpenStreetMap](https://www.openstreetmap.org/copyright), gratuito e sem chave, mostradas com Leaflet dentro de um WebView (`app/src/components/MapaReal.tsx`).
+- **Mapa:** estilo claro [CARTO Positron](https://carto.com/basemaps/) com dados do [OpenStreetMap](https://www.openstreetmap.org/copyright), gratuito e sem chave, mostradas com Leaflet dentro de um WebView (`app/src/components/MapaReal.tsx`).
 - Não há dados pessoais reais em nenhum ponto.
 
 ### Como ver o estado de erro
