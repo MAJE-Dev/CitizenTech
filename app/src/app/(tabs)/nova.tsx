@@ -1,7 +1,5 @@
 import { useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { Image } from "expo-image";
+import { useTeclado } from "@/components/useTeclado";
 import { router } from "expo-router";
 import { Botao, Chip } from "@/components/ui";
 import { escolherFoto, tirarFoto } from "@/services/fotos";
@@ -19,6 +18,7 @@ import { Colors, Fonts, MinTouch, Radius, Sizes, Spacing } from "@/theme";
 const mensagem = (e: unknown, padrao: string) => (e instanceof Error ? e.message : padrao);
 
 export default function Nova() {
+  const teclado = useTeclado();
   const [tipo, setTipo] = useState(TIPOS[0]!);
   const [gravidade, setGravidade] = useState<Gravidade>("Moderada");
   const [endereco, setEndereco] = useState("");
@@ -89,12 +89,16 @@ export default function Nova() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ padding: Spacing.md, gap: Spacing.lg }}
+        ref={teclado.ref}
+        onScroll={teclado.onScroll}
+        scrollEventThrottle={16}
+        contentContainerStyle={{
+          padding: Spacing.md,
+          paddingBottom: Spacing.md + teclado.espaco,
+          gap: Spacing.lg,
+        }}
         keyboardShouldPersistTaps="handled"
       >
         <View style={{ gap: Spacing.xs }}>
@@ -153,6 +157,7 @@ export default function Nova() {
             placeholder="Ex.: Rua das Flores, 100"
             placeholderTextColor={Colors.textoSuave}
             accessibilityLabel="Endereço do problema"
+            onFocus={teclado.revelar}
             style={[s.campo, !!erroEndereco && { borderColor: Colors.grave }]}
           />
           {!!erroEndereco && (
@@ -214,6 +219,7 @@ export default function Nova() {
             placeholder="Ex.: buraco grande perto da faixa"
             placeholderTextColor={Colors.textoSuave}
             accessibilityLabel="Descrição do problema"
+            onFocus={teclado.revelar}
             style={[
               s.campo,
               {
@@ -238,7 +244,7 @@ export default function Nova() {
           />
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
