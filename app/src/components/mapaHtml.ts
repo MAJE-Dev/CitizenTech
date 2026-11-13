@@ -1,4 +1,4 @@
-// Página do mapa real: Leaflet + imagens do OpenStreetMap (gratuito, sem chave).
+// Página do mapa real: Leaflet + estilo CARTO Positron (dados do OpenStreetMap), gratuito e sem chave.
 // Ela roda dentro de um WebView e conversa com o app por mensagens:
 //   página -> app: { tipo: "pronto" } | { tipo: "selecionar", id } | { tipo: "falha" }
 //   app -> página: window.atualizar({ pontos, selecionado })
@@ -6,7 +6,8 @@ import { Colors, Sizes } from "@/theme";
 
 /** Endereço das imagens do mapa. Pode ser trocado por EXPO_PUBLIC_MAPA_TILES (veja .env.example). */
 export const MAPA_TILES =
-  process.env.EXPO_PUBLIC_MAPA_TILES || "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+  process.env.EXPO_PUBLIC_MAPA_TILES ||
+  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 /** Identifica o app para o servidor do mapa (a política do OpenStreetMap pede isso). */
 export const MAPA_ORIGEM = "https://github.com/MAJE-Dev/CitizenTech";
 const LEAFLET = "https://unpkg.com/leaflet@1.9.4/dist";
@@ -72,7 +73,9 @@ export function htmlDoMapa(): string {
   var chegou = 0;
   var camada = L.tileLayer(${JSON.stringify(MAPA_TILES)}, {
     maxZoom: 19,
-    attribution: "\\u00a9 OpenStreetMap",
+    subdomains: "abcd",
+    detectRetina: true,
+    attribution: "\\u00a9 OpenStreetMap \\u00a9 CARTO",
   }).addTo(mapa);
   camada.on("tileload", function () { chegou++; });
   setTimeout(function () { if (!chegou) falha(); }, ${ESPERA_MS});
