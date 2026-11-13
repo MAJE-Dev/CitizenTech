@@ -2,13 +2,14 @@
 // Uso: const t = useTeclado(); <ScrollView ref={t.ref} onScroll={t.onScroll} scrollEventThrottle={16}
 //   contentContainerStyle={[..., { paddingBottom: t.espaco }]}> ... <TextInput onFocus={t.revelar} />
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { ComponentRef } from "react";
 import { Keyboard, Platform, ScrollView, TextInput } from "react-native";
 import type { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 
 const FOLGA = 24; // espaço entre o campo e o teclado
 
 export function useTeclado() {
-  const ref = useRef<ScrollView>(null);
+  const ref = useRef<ComponentRef<typeof ScrollView>>(null);
   const deslocamento = useRef(0);
   const topoTeclado = useRef<number | null>(null);
   const [espaco, setEspaco] = useState(0);
