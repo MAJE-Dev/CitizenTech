@@ -1,24 +1,13 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors, Fonts, Radius, Sizes, Spacing } from "@/theme";
-import type { Gravidade, Ocorrencia } from "@/services/ocorrencias";
+import { corPino, type MapaProps } from "./mapaDados";
 
-const corPino: Record<Gravidade, string> = {
-  Grave: Colors.grave,
-  Moderada: Colors.moderada,
-  Leve: Colors.leve,
-};
-
-/** Mapa ilustrativo: posiciona as ocorrências em % sobre um fundo simples. */
-export function Mapa({
-  itens,
-  selecionado,
-  onSelect,
-}: {
-  itens: Ocorrencia[];
-  selecionado?: string;
-  onSelect: (id: string) => void;
-}) {
+/**
+ * Mapa ilustrativo: posiciona as ocorrências em % sobre um fundo simples.
+ * É o que aparece quando o mapa real não pode ser carregado (sem internet).
+ */
+export function Mapa({ itens, selecionado, onSelect }: MapaProps) {
   return (
     <View style={s.mapa} accessibilityLabel={`Mapa ilustrativo com ${itens.length} ocorrências`}>
       <View style={[s.parque, { left: "60%", top: "40%", width: "15%", height: "12%" }]} />

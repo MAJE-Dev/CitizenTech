@@ -13,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { Botao, Cartao, Chip, Estado, GravidadeTag, Linha, StatusTag } from "@/components/ui";
 import { Mapa } from "@/components/Mapa";
+import { MapaReal } from "@/components/MapaReal";
 import { useCarregar } from "@/hooks/useCarregar";
 import { listarOcorrencias, TIPOS } from "@/services/ocorrencias";
 import { Colors, Fonts, MinTouch, Radius, Sizes, Spacing } from "@/theme";
@@ -28,6 +29,8 @@ export default function Inicio() {
   const [filtro, setFiltro] = useState<string | null>(null);
   const [busca, setBusca] = useState("");
   const [sel, setSel] = useState<string>();
+  // Sem internet (ou se o mapa real não abrir), mostra o mapa ilustrativo no lugar.
+  const [mapaFalhou, setMapaFalhou] = useState(false);
 
   const itens = (dados?.itens ?? []).filter(
     (o) =>
@@ -41,7 +44,10 @@ export default function Inicio() {
       data={primeiraCarga || erro ? [] : itens}
       keyExtractor={(o) => o.id}
       refreshing={carregando && !primeiraCarga}
-      onRefresh={recarregar}
+      onRefresh={() => {
+        setMapaFalhou(false); // puxar para atualizar tenta o mapa real de novo
+        recarregar();
+      }}
       contentContainerStyle={{ padding: Spacing.md, gap: Spacing.sm }}
       keyboardShouldPersistTaps="handled"
       ListHeaderComponent={
@@ -91,7 +97,16 @@ export default function Inicio() {
                   Sem internet agora. Mostrando as ocorrências de exemplo que estão salvas no app.
                 </Text>
               )}
-              <Mapa itens={itens} selecionado={sel} onSelect={setSel} />
+              {dados?.offline || mapaFalhou ? (
+                <Mapa itens={itens} selecionado={sel} onSelect={setSel} />
+              ) : (
+                <MapaReal
+                  itens={itens}
+                  selecionado={sel}
+                  onSelect={setSel}
+                  onFalha={() => setMapaFalhou(true)}
+                />
+              )}
               {atual && (
                 <Cartao>
                   <Text style={s.id}>{atual.id}</Text>
