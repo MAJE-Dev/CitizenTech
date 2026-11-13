@@ -1,8 +1,22 @@
 // Tema centralizado: cores, fontes, espaçamentos e raios.
 // Nenhuma tela deve usar cor, tamanho de fonte ou espaçamento fixo.
+// Paleta da marca SmartRoad: um azul único (o mesmo no topo, nos botões e no ícone do app)
+// e um amarelo de sinalização viária, usado em detalhes do logo e em avisos.
+export const Marca = {
+  azul: "#0054b0", // cor principal (contraste 7,2:1 com branco)
+  azulEscuro: "#003d82", // variação para toque/pressionado
+  azulClaro: "#e6f0fb", // fundo suave de destaque
+  amarelo: "#ffc21a", // sinalização: faixa do logo e avisos
+  amareloClaro: "#fff4d6", // fundo de avisos (texto escuro, contraste 15:1)
+} as const;
+
 export const Colors = {
-  marca: "#0080ff", // barra do topo (SmartRoad)
-  primaria: "#0057b8", // botões e links (contraste 7:1 com branco)
+  marca: Marca.azul, // barra do topo
+  primaria: Marca.azul, // botões, links e aba ativa (mesma cor do topo)
+  primariaPressionada: Marca.azulEscuro,
+  primariaSuave: Marca.azulClaro,
+  destaque: Marca.amarelo,
+  avisoFundo: Marca.amareloClaro,
   branco: "#ffffff",
   primariaTexto: "#ffffff",
   fundo: "#f2f6fc",
@@ -13,7 +27,7 @@ export const Colors = {
   grave: "#b3261e",
   moderada: "#e8710a",
   leve: "#f2c500",
-  progresso: "#0057b8",
+  progresso: Marca.azul,
   concluida: "#1b7f4b",
   mapaTerra: "#e9efe3",
   mapaRua: "#ffffff",
@@ -44,5 +58,6 @@ export const Sizes = {
   rua: 6,
   iconePino: 20,
   iconePinoAtivo: 24,
-  iconeMarca: 26,
+  iconeMarca: 30,
+  iconeAviso: 22,
 } as const;

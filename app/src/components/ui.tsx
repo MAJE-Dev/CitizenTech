@@ -36,7 +36,7 @@ export function Botao({
       style={({ pressed }) => [
         s.botao,
         secundario && s.botaoSec,
-        pressed && { opacity: 0.8 },
+        pressed && (secundario ? s.botaoSecPress : s.botaoPress),
         desativado && { opacity: 0.5 },
         estilo,
       ]}
@@ -160,7 +160,12 @@ const s = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.primaria,
   },
+  botaoPress: {
+    backgroundColor: Colors.primariaPressionada,
+    borderColor: Colors.primariaPressionada,
+  },
   botaoSec: { backgroundColor: Colors.cartao },
+  botaoSecPress: { backgroundColor: Colors.primariaSuave },
   botaoTxt: { color: Colors.primariaTexto, fontSize: Fonts.subtitulo, fontWeight: "700" },
   chip: {
     minHeight: Sizes.chip,
