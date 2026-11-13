@@ -137,7 +137,7 @@ app/
 ## Gerar uma nova versão do APK
 
 1. Confira a versão em `app/app.json` (`version` e `android.versionCode`) e em `app/package.json`.
-2. No GitHub, abra **Releases → Draft a new release**, crie a tag (ex.: `v1.1.0`) apontando para a `main` e publique.
+2. No GitHub, abra **Releases → Draft a new release**, crie a próxima tag da sequência (ex.: `v6`) apontando para a `main` e publique.
 3. O workflow **Build APK** (`.github/workflows/build-apk.yml`) compila o app e anexa o `SmartRoad-CitizenTech.apk` na release. Acompanhe o andamento na aba **Actions**.
 
 Para só testar se compila, sem publicar: **Actions → Build APK → Run workflow**, escolha o branch e deixe o campo da tag vazio. O APK fica como _artifact_ da execução.

@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Tag da release que vai receber o .apk (ex.: v1.1.0). Vazio = só compilar e guardar o APK como artifact, sem publicar."
+        description: "Tag da release que vai receber o .apk (ex.: v6). Vazio = só compilar e guardar o APK como artifact, sem publicar."
         required: false
 
 permissions:
