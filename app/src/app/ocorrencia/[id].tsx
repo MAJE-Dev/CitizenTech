@@ -8,13 +8,15 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Botao, Cartao, Estado, GravidadeTag, Linha, StatusTag } from "@/components/ui";
 import { useCarregar } from "@/hooks/useCarregar";
 import { listarComentarios, salvarComentario } from "@/services/db";
+import { uriDaFoto } from "@/services/fotos";
 import { buscarOcorrencia } from "@/services/ocorrencias";
-import { Colors, Fonts, MinTouch, Radius, Spacing } from "@/theme";
+import { Colors, Fonts, MinTouch, Radius, Sizes, Spacing } from "@/theme";
 
 export default function Detalhe() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -26,6 +28,7 @@ export default function Detalhe() {
   const [texto, setTexto] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [erroEnvio, setErroEnvio] = useState("");
+  const [fotoFalhou, setFotoFalhou] = useState(false);
 
   const enviar = async () => {
     const limpo = texto.trim();
@@ -82,9 +85,20 @@ export default function Detalhe() {
               <Linha rotulo="Endereço" valor={dados.endereco} />
               <Linha
                 rotulo="Coordenadas"
-                valor={`${dados.lat.toFixed(4)}, ${dados.lng.toFixed(4)}`}
+                valor={`${dados.lat.toFixed(4)}, ${dados.lng.toFixed(4)}${
+                  dados.localReal === 0 ? " (aproximadas)" : ""
+                }`}
               />
             </Cartao>
+            {!!dados.foto && !fotoFalhou && (
+              <Image
+                source={{ uri: uriDaFoto(dados.foto) }}
+                style={s.foto}
+                contentFit="cover"
+                accessibilityLabel="Foto do problema enviada no registro"
+                onError={() => setFotoFalhou(true)}
+              />
+            )}
             <Cartao>
               <Linha rotulo="Tipo" valor={dados.tipo} />
               <Linha rotulo="Andamento" valor={dados.andamento} />
@@ -158,6 +172,13 @@ const s = StyleSheet.create({
   comTxt: { fontSize: Fonts.corpo, color: Colors.texto },
   data: { fontSize: Fonts.pequena, color: Colors.textoSuave },
   erro: { fontSize: Fonts.corpo, fontWeight: "700", color: Colors.grave },
+  foto: {
+    height: Sizes.foto,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderColor: Colors.borda,
+    backgroundColor: Colors.cartao,
+  },
   campo: {
     minHeight: MinTouch,
     borderWidth: 1,

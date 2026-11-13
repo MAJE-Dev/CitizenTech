@@ -33,6 +33,7 @@ export const Colors = {
   mapaRua: "#ffffff",
   mapaParque: "#c8e6c0",
   mapaNota: "rgba(255,255,255,0.9)", // fundo da legenda do mapa
+  sombra: "rgba(0,0,0,0.35)", // sombra dos pinos no mapa real
 } as const;
 
 export const Fonts = {
@@ -60,4 +61,6 @@ export const Sizes = {
   iconePinoAtivo: 24,
   iconeMarca: 30,
   iconeAviso: 22,
+  iconeBotao: 22,
+  foto: 200, // altura da foto do problema
 } as const;

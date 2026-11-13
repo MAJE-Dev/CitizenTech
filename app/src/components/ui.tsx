@@ -8,6 +8,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { Colors, Fonts, MinTouch, Radius, Sizes, Spacing } from "@/theme";
 import type { Gravidade, Status } from "@/services/ocorrencias";
 
@@ -15,6 +16,7 @@ export function Botao({
   titulo,
   onPress,
   rotulo,
+  icone,
   secundario,
   desativado,
   estilo,
@@ -22,6 +24,7 @@ export function Botao({
   titulo: string;
   onPress: () => void;
   rotulo?: string;
+  icone?: keyof typeof Ionicons.glyphMap;
   secundario?: boolean;
   desativado?: boolean;
   estilo?: StyleProp<ViewStyle>;
@@ -41,6 +44,13 @@ export function Botao({
         estilo,
       ]}
     >
+      {icone && (
+        <Ionicons
+          name={icone}
+          size={Sizes.iconeBotao}
+          color={secundario ? Colors.primaria : Colors.primariaTexto}
+        />
+      )}
       <Text style={[s.botaoTxt, secundario && { color: Colors.primaria }]}>{titulo}</Text>
     </Pressable>
   );
@@ -154,6 +164,8 @@ const s = StyleSheet.create({
     minHeight: MinTouch,
     borderRadius: Radius.md,
     backgroundColor: Colors.primaria,
+    flexDirection: "row",
+    gap: Spacing.sm,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: Spacing.md,
@@ -166,7 +178,13 @@ const s = StyleSheet.create({
   },
   botaoSec: { backgroundColor: Colors.cartao },
   botaoSecPress: { backgroundColor: Colors.primariaSuave },
-  botaoTxt: { color: Colors.primariaTexto, fontSize: Fonts.subtitulo, fontWeight: "700" },
+  botaoTxt: {
+    color: Colors.primariaTexto,
+    fontSize: Fonts.subtitulo,
+    fontWeight: "700",
+    flexShrink: 1,
+    textAlign: "center",
+  },
   chip: {
     minHeight: Sizes.chip,
     justifyContent: "center",

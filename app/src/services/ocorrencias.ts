@@ -17,6 +17,10 @@ export interface Ocorrencia {
   atualizadaEm: string;
   andamento: string;
   descricao: string;
+  /** Foto do problema (só nas ocorrências registradas no aparelho). */
+  foto?: string | null;
+  /** 1 quando lat/lng vieram do GPS do celular; 0 quando são aproximadas. Ausente no mock. */
+  localReal?: number;
 }
 
 export const TIPOS = ["Buraco", "Bueiro quebrado", "Iluminação", "Calçada danificada"];
@@ -92,6 +96,10 @@ export interface NovaOcorrencia {
   gravidade: Gravidade;
   endereco: string;
   descricao: string;
+  /** Posição real do celular, quando o cidadão toca em "Usar minha localização". */
+  local?: { lat: number; lng: number };
+  /** Endereço temporário da foto tirada ou escolhida. */
+  fotoUri?: string;
 }
 
 const sortear = (min: number, max: number) => Math.floor(min + Math.random() * (max - min + 1));
@@ -106,6 +114,7 @@ export async function registrarOcorrencia(nova: NovaOcorrencia): Promise<Ocorren
   const { dataBR, inserirOcorrencia } = await import("./db");
   const daCidade = new Set((cidade?.itens ?? MOCK_EMBUTIDO).map((o) => o.id));
   const hoje = dataBR(new Date());
+  const foto = nova.fotoUri ? await (await import("./fotos")).guardarFoto(nova.fotoUri) : null;
   for (let tentativa = 0; tentativa < MAX_TENTATIVAS; tentativa++) {
     const id = `OC-${sortear(1000, 9999)}-${sortear(100, 999)}`;
     if (daCidade.has(id)) continue;
@@ -116,8 +125,11 @@ export async function registrarOcorrencia(nova: NovaOcorrencia): Promise<Ocorren
       status: "Recebida",
       endereco: nova.endereco,
       descricao: nova.descricao || "Sem descrição.",
-      lat: -23.55 + Math.random() * 0.01, // coordenadas fictícias
-      lng: -46.64 + Math.random() * 0.01,
+      // Sem GPS, o ponto fica numa posição aproximada (fictícia) no centro de São Paulo.
+      lat: nova.local?.lat ?? -23.55 + Math.random() * 0.01,
+      lng: nova.local?.lng ?? -46.64 + Math.random() * 0.01,
+      localReal: nova.local ? 1 : 0,
+      foto,
       x: sortear(15, 85), // posição no mapa ilustrativo (%)
       y: sortear(15, 85),
       abertaEm: hoje,
